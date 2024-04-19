@@ -5,3 +5,4 @@ lib/python3.10/site-packages/
 __pycache__/
 
 text_art.py
+language_processing.txt

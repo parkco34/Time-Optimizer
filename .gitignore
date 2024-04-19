@@ -1,7 +1,7 @@
 .python-version
-.pyvenv.cfg
 .env
 bin/
+pyvenv.cfg
 lib/python3.10/site-packages/
 __pycache__/
 

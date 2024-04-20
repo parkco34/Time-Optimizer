@@ -2,6 +2,110 @@
 import re
 from math import ceil
 import datetime
+from textwrap import dedent
+from text_art import thing
+
+# GPT4
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    return lines[1:]  # Skip the header line
+
+def extract_book_titles(lines):
+    book_titles = [line.split(',')[1].strip() for line in lines]
+
+    return book_titles
+
+def create_book_title_dict(book_titles):
+    book_title_dict = {}
+    index = 1
+
+    for title in book_titles:
+        if title not in book_title_dict.values():
+            book_title_dict[index] = title
+            index += 1
+
+    return book_title_dict
+
+def get_input(new_book=False):
+    """
+    Gets user input as book number.
+    """
+    tries = 0
+    while tries < 3:
+        tries += 1
+
+        if not new_book:
+            user = input("\n\nEnter book number:")
+            # Ensure input is numeric
+            if user.isnumeric():
+                return int(user)
+
+            else:
+                print("Invalid input, please try again: (◕‿◕)╭∩╮\n")
+
+        else:
+            user = input("\n\nEnter book title: (◕‿◕)╭∩╮\n")
+            # Ensure input is alphabetic 
+            if user.isalpha():
+                return user
+
+            else:
+                print("Invalid input, please try again: ")
+
+    print(thing)
+    return None
+
+
+def output_book_list(books):
+    """
+    Provides book list for user to select the given index for the corresponding
+    book title, unless it must be added.
+    --------------------------------------------------------
+    Input:
+        books: (dict)
+
+    Ouput:
+        None
+    """
+    for idx, title in books.items():
+        print(f"[{idx}]: {title}")
+
+    return None
+
+def output_selection(key, books):
+    """
+    Output the selected book title.
+    -------------------------------
+    Input:
+        key: (int)
+        book title: (str)
+
+    Output:
+        selected book titile: (str)
+    """
+    return books[key]
+
+def create_book(book_title ,books):
+    """
+    Takes user input and creates a book title.
+    ---------------------------------
+    Input:
+        book_title: (str) 
+        books: (dict)
+
+    Output:
+        books: (dict) with new index and title added.
+
+    """
+    idx = list(books.keys())
+    new_indx = idx[-1] + 1
+    
+    books[new_indx] = book_title
+    print(f"New book added: {new_indx}: {book_title}")
+
+    return books
 
 def input_validation():
     """
@@ -30,35 +134,11 @@ def input_validation():
 
     return key
 
-def book_selection(books):
-    """
-    USER ENTERS THE NUMBER ASSOCIATED WITH THE DESIRED BOOK.
-    Dictionary of integer-book pairs.
-    Loops thru the dictionary for the the integer entered, returning that book
-    title.
-    while loop for proper user input.
-    ------------------
-    Input:
-        books: Integer-book pairs (dict)
-
-    Output:
-        title: Book title (str)
-    """
-    key = input_validation()
-
-    if (key > 1 or key <= len(books.values(list(books.values())))):
-        print("Nice job asshole")
-
-
-    
-
 # Function to convert mixed numbers or pure numbers to float
 def convert_string(string):
 
     try:
         parts = string.split()
-
-        if len(parts) == 2:
             whole_number, fraction = int(parts[0]), parts[1]
             numerator, denominator = map(int, fraction.split('/'))
             return whole_number + numerator / denominator
@@ -74,20 +154,19 @@ def convert_string(string):
 def calculate_reading_rate():
     pages_read = convert_string(input("Enter the number of pages you have read: "))
     less_than_hour = input("Did you read for less than an hour? (yes/no): ").strip().lower()
+
     if less_than_hour == "yes":
         hours_spent = 0
         minutes_spent = convert_string(input("Enter the number of minutes spent reading: "))
+
     else:
         hours_spent = convert_string(input("Enter the number of full hours spent reading: "))
         minutes_spent = convert_string(input("Enter the number of additional minutes spent reading: "))
+
     total_time_spent_hours = hours_spent + (minutes_spent / 60)
     reading_rate = pages_read / total_time_spent_hours
     print(f"Your reading rate is {reading_rate:.2f} pages per hour.")
     
-    """
-    Replace this line (below) with book_selection function
-
-    """
     book_name = input("Enter the name of the book you are reading: ").strip()
     save_reading_session(book_name, pages_read, total_time_spent_hours, reading_rate)
     number_of_reading_sessions(reading_rate)
@@ -96,6 +175,7 @@ def calculate_reading_rate():
 def save_reading_session(book_name, pages_read, hours_spent, reading_rate):
     date_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     session_data = f"{date_str}, {book_name}, {pages_read}, {hours_spent:.2f}, {reading_rate:.2f}\n"
+
     with open("reading_sessions.txt", "a") as file:
         file.write(session_data)
     print("Reading session saved.")
@@ -113,6 +193,7 @@ def remove_text_within_parentheses_count_words_handle_hyphens(input_string):
     input_string_without_hyphens = re.sub(r'-', ' ', input_string)
     words = re.findall(r'\b[a-zA-Z][a-zA-Z0-9_]*\b', input_string_without_hyphens)
     word_count = len(words)
+
     return input_string_without_hyphens, word_count
 
 # Function to read from text file and process for word count
@@ -122,15 +203,42 @@ I need to count the number of RELEVANT words in a textfile.
 """
 def process_file_for_word_count():
     file_path = input("Enter the text file to be read: ")
+
     with open(file_path, 'r', encoding='utf-8') as file:
         file_contents = file.read()
+
     cleaned_string, word_count = remove_text_within_parentheses_count_words_handle_hyphens(file_contents)
     print(f"Cleaned string: {cleaned_string}")
     print(f"Word count: {word_count}")
 
+def main():
+    file_path = 'reading_sessionz.txt'
+    lines = read_file(file_path)
+    book_titles = extract_book_titles(lines)
+    book_title_dict = create_book_title_dict(book_titles)
+
+    print("Book Title Dictionary:")
+    output_book_list(book_title_dict)
+
+    while True:
+        user_input = get_input()
+
+        if user_input is None:
+            break
+
+        if user_input == 0:
+            new_book_title = get_input(new_book=True)
+            if new_book_title is not None:
+                book_title_dict = create_book(new_book_title, book_title_dict)
+        else:
+            if selected_book is not None:
+                print(f"Selected book: {selected_book}")
+                calculate_reading_rate(selected_book)
+
 # Main script logic
 if __name__ == "__main__":
-    calculate_reading_rate()
+    main()
+
 #    check = input(
 #"""Did you check the 'reading_session.txt' file?
 #                  (y/n)""").lower()

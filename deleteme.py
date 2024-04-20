@@ -1,34 +1,29 @@
 #!/usr/bin/env python
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+    return lines[1:]  # Skip the header line
 
+def extract_book_titles(lines):
+    book_titles = [line.split(',')[1].strip() for line in lines]
+    return book_titles
 
-    raise ValueError(dedent("""\n\n
-SSSS   TTTTT  U   U  PPPP   III  DDDD  
-S        T    U   U  P   P   I   D   D 
- SSS     T    U   U  PPPP    I   D   D 
-    S    T    U   U  P       I   D   D 
-SSSS     T     UUU   P      III  DDDD  
+def create_book_title_dict(book_titles):
+    book_title_dict = {}
+    index = 1
+    for title in book_titles:
+        if title not in book_title_dict.values():
+            book_title_dict[index] = title
+            index += 1
+    return book_title_dict
 
-    FFFFF  U   U  CCCC  K   K
-    F      U   U  C     K  K
-    FFFF   U   U  C     KKK
-    F      U   U  C     K  K
-    F       UUU   CCCC  K   K
+# Usage example
+file_path = 'reading_sessionz.txt'
+lines = read_file(file_path)
+book_titles = extract_book_titles(lines)
+book_title_dict = create_book_title_dict(book_titles)
 
+print("Book Title Dictionary:")
+for index, title in book_title_dict.items():
+    print(f"{index}: {title}")
 
-
-     _                         _
-    |_|                       |_|
-    | |         /^^^\         | |
-   _| |_      (| "o" |)      _| |_
- _| | | | _    (_---_)    _ | | | |_ 
-| | | | |' |    _| |_    | `| | | | |
-\          /   /     \   \          /
- \        /  / /(. .)\ \  \        /
-   \    /  / /  | . |  \ \  \    /
-     \  \/ /    ||Y||    \ \/  /
-       \_/      || ||      \_/
-                () ()
-                || ||
-               ooO Ooo
-
-          \n\n"""))

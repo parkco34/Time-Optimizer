@@ -108,8 +108,3 @@ if key != None:
 else:
     print("Fuck off, yo")
 
-#def main():
-#    pass
-#
-#if __name__ == "__main__":
-#    main()

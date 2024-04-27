@@ -44,19 +44,13 @@ def get_input(new_book=False):
 
             else:
                 print("Invalid input, please try again: (◕‿◕)╭∩╮\n")
-
+                
         else:
             user = input("\n\nEnter book title: (◕‿◕)╭∩╮\n")
             # Ensure input is alphabetic 
-            if user.isalpha():
-                return user
-
-            else:
-                print("Invalid input, please try again: ")
+            return user
 
     print(thing)
-    return None
-
 
 def output_book_list(books):
     """
@@ -139,9 +133,10 @@ def convert_string(string):
 
     try:
         parts = string.split()
-            whole_number, fraction = int(parts[0]), parts[1]
-            numerator, denominator = map(int, fraction.split('/'))
-            return whole_number + numerator / denominator
+        whole_number, fraction = int(parts[0]), parts[1]
+        numerator, denominator = map(int, fraction.split('/'))
+
+        return whole_number + numerator / denominator
 
         return float(string)
 
@@ -176,7 +171,7 @@ def save_reading_session(book_name, pages_read, hours_spent, reading_rate):
     date_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     session_data = f"{date_str}, {book_name}, {pages_read}, {hours_spent:.2f}, {reading_rate:.2f}\n"
 
-    with open("reading_sessions.txt", "a") as file:
+    with open("reading_sessionz.txt", "a") as file:
         file.write(session_data)
     print("Reading session saved.")
 
@@ -228,9 +223,12 @@ def main():
 
         if user_input == 0:
             new_book_title = get_input(new_book=True)
+
             if new_book_title is not None:
                 book_title_dict = create_book(new_book_title, book_title_dict)
+
         else:
+
             if selected_book is not None:
                 print(f"Selected book: {selected_book}")
                 calculate_reading_rate(selected_book)
@@ -250,6 +248,5 @@ if __name__ == "__main__":
 #    else:
 #        print("Eat shit   (◕‿◕)╭∩╮")
 #        exit()
-#
 
 

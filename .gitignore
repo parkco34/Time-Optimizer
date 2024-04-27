@@ -1,4 +1,5 @@
 .python-version
+Pip*
 .env
 bin/
 pyvenv.cfg

@@ -28,6 +28,9 @@ def create_book_title_dict(book_titles):
 
     return book_title_dict
 
+""" 
+REDO THIS SHIT FUNCTION!!
+"""
 def get_input(new_book=False):
     """
     Gets user input as book number.
@@ -37,7 +40,11 @@ def get_input(new_book=False):
         tries += 1
 
         if not new_book:
-            user = input("\n\nEnter book number:")
+            user = input(dedent("""
+\n\n
+Enter book number:
+Press '0' (zero) to enter a new book
+                                """))
             # Ensure input is numeric
             if user.isnumeric():
                 return int(user)
@@ -51,6 +58,21 @@ def get_input(new_book=False):
             return user
 
     print(thing)
+
+def get_book_from_user():
+    """
+    Either selects an existing book title or provides a new entry.
+    To replace the get_input function.
+    ---------------------------------------------
+    User: enter the index number of book OR '0' for a new book entry
+    Convert str to integer (input: int only) using try, exception blocks
+    Ensure valid entry (ew) for OUTPUT
+    """
+    user_input = int(input(dedent("""
+Please select a book from the list by entering the index number 
+(Press 0 for new entry (ew)):
+                                  """)))
+    
 
 def output_book_list(books):
     """
@@ -130,23 +152,41 @@ def input_validation():
 
 # Function to convert mixed numbers or pure numbers to float
 def convert_string(string):
-
     try:
         parts = string.split()
-        whole_number, fraction = int(parts[0]), parts[1]
-        numerator, denominator = map(int, fraction.split('/'))
-
-        return whole_number + numerator / denominator
-
-        return float(string)
-
-    except ValueError as e:
+        if len(parts) == 1:
+            return float(parts[0])
+        elif len(parts) == 2:
+            whole_number = int(parts[0])
+            numerator, denominator = map(int, parts[1].split('/'))
+            return whole_number + numerator / denominator
+        else:
+            raise ValueError("Invalid input format")
+    except (ValueError, ZeroDivisionError) as e:
         print(f"An error occurred: {e}")
-
         return None
+
+#def convert_string(string):
+#
+#    try:
+#        parts = string.split()
+#        whole_number, fraction = int(parts[0]), parts[1]
+#        numerator, denominator = map(int, fraction.split('/'))
+#
+#        return whole_number + numerator / denominator
+#
+#        return float(string)
+#
+#    except ValueError as e:
+#        print(f"An error occurred: {e}")
+#
+#        return None
 
 # Main function to calculate and save the reading rate
 def calculate_reading_rate():
+    """
+    Calculates the reading rate by ... ( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°) 
+    """
     pages_read = convert_string(input("Enter the number of pages you have read: "))
     less_than_hour = input("Did you read for less than an hour? (yes/no): ").strip().lower()
 
@@ -174,6 +214,7 @@ def save_reading_session(book_name, pages_read, hours_spent, reading_rate):
     with open("reading_sessionz.txt", "a") as file:
         file.write(session_data)
     print("Reading session saved.")
+    print(f"CURRENTLY USING FAKE OUTPUT TO DATA!")
 
 # Function to calculate the number of 30-minute sessions required based on reading rate
 def number_of_reading_sessions(reading_rate):
@@ -215,23 +256,32 @@ def main():
     print("Book Title Dictionary:")
     output_book_list(book_title_dict)
 
-    while True:
+    book = ""
+    book_not_selected = True
+    while book_not_selected:
         user_input = get_input()
 
         if user_input is None:
             break
 
         if user_input == 0:
-            new_book_title = get_input(new_book=True)
+            book = get_input(new_book=True)
 
-            if new_book_title is not None:
-                book_title_dict = create_book(new_book_title, book_title_dict)
+            if book is not None:
+                book_title_dict = create_book(book, book_title_dict)
+                book_not_selected = False
 
         else:
 
-            if selected_book is not None:
-                print(f"Selected book: {selected_book}")
-                calculate_reading_rate(selected_book)
+            book = get_input()
+            book_not_selected = False
+            print(f"Selected book: {book}")
+
+        """
+        ? --> Fix this plz ...  ʘ‿ʘ
+        """
+    breakpoint()
+    calculate_reading_rate()
 
 # Main script logic
 if __name__ == "__main__":
@@ -248,5 +298,6 @@ if __name__ == "__main__":
 #    else:
 #        print("Eat shit   (◕‿◕)╭∩╮")
 #        exit()
+#
 
 

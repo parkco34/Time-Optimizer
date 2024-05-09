@@ -1,0 +1,1 @@
+To be a winner in a certain game, you must be successful in Q successive rounds. The game depends on the value of U, a uniform random variable on the interval (a, b). You are successful in round 1 if U>p1, successful in round 2 if U>p2, and successful in round 3 if U>p3.

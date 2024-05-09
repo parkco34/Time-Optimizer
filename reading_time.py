@@ -31,48 +31,34 @@ def create_book_title_dict(book_titles):
 """ 
 REDO THIS SHIT FUNCTION!!
 """
-def get_input(new_book=False):
+def get_input():
     """
-    Gets user input as book number.
+    Gets user input as a book index number or a new book entry,
+    where if '0' is entered, the user will enter the new book title.
+    ----------------------------------------------------
+    INPUT:
+        None
+
+    OUTPUT:
+        
     """
     tries = 0
     while tries < 3:
         tries += 1
 
-        if not new_book:
-            user = input(dedent("""
+        user = input(dedent("""
 \n\n
 Enter book number:
 Press '0' (zero) to enter a new book
-                                """))
-            # Ensure input is numeric
-            if user.isnumeric():
-                return int(user)
+                """))
+        if user.isnumeric():
+            return int(user)
 
-            else:
-                print("Invalid input, please try again: (◕‿◕)╭∩╮\n")
-                
         else:
-            user = input("\n\nEnter book title: (◕‿◕)╭∩╮\n")
-            # Ensure input is alphabetic 
-            return user
+            print(f"Invalid input, please try again: (◕‿◕)╭∩╮\n")
 
-    print(thing)
+    print(thing) # output offensive text-image and I love it
 
-def get_book_from_user():
-    """
-    Either selects an existing book title or provides a new entry.
-    To replace the get_input function.
-    ---------------------------------------------
-    User: enter the index number of book OR '0' for a new book entry
-    Convert str to integer (input: int only) using try, exception blocks
-    Ensure valid entry (ew) for OUTPUT
-    """
-    user_input = int(input(dedent("""
-Please select a book from the list by entering the index number 
-(Press 0 for new entry (ew)):
-                                  """)))
-    
 
 def output_book_list(books):
     """
@@ -166,22 +152,6 @@ def convert_string(string):
         print(f"An error occurred: {e}")
         return None
 
-#def convert_string(string):
-#
-#    try:
-#        parts = string.split()
-#        whole_number, fraction = int(parts[0]), parts[1]
-#        numerator, denominator = map(int, fraction.split('/'))
-#
-#        return whole_number + numerator / denominator
-#
-#        return float(string)
-#
-#    except ValueError as e:
-#        print(f"An error occurred: {e}")
-#
-#        return None
-
 # Main function to calculate and save the reading rate
 def calculate_reading_rate():
     """
@@ -204,10 +174,14 @@ def calculate_reading_rate():
     
     book_name = input("Enter the name of the book you are reading: ").strip()
     save_reading_session(book_name, pages_read, total_time_spent_hours, reading_rate)
+    breakpoint()
     number_of_reading_sessions(reading_rate)
 
 # Function to save reading session to a file
 def save_reading_session(book_name, pages_read, hours_spent, reading_rate):
+    """
+    Saves reading sessions (data).
+    """
     date_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     session_data = f"{date_str}, {book_name}, {pages_read}, {hours_spent:.2f}, {reading_rate:.2f}\n"
 
@@ -261,19 +235,17 @@ def main():
     while book_not_selected:
         user_input = get_input()
 
-        if user_input is None:
-            break
+        if get_input == 0:
+            book = input(dedent(
+"""
+Please enter the new book title: 
+"""
+            ))
 
-        if user_input == 0:
-            book = get_input(new_book=True)
-
-            if book is not None:
-                book_title_dict = create_book(book, book_title_dict)
-                book_not_selected = False
+            book_title_dict = create_book(book, book_title_dict)
+            book_not_selected = False
 
         else:
-
-            book = get_input()
             book_not_selected = False
             print(f"Selected book: {book}")
 
@@ -286,18 +258,5 @@ def main():
 # Main script logic
 if __name__ == "__main__":
     main()
-
-#    check = input(
-#"""Did you check the 'reading_session.txt' file?
-#                  (y/n)""").lower()
-#
-#    if check == "y":
-#        calculate_reading_rate()  # To calculate reading rate and manage reading sessions
-#    #    process_file_for_word_count()  # To process a text file for word count
-#
-#    else:
-#        print("Eat shit   (◕‿◕)╭∩╮")
-#        exit()
-#
 
 
